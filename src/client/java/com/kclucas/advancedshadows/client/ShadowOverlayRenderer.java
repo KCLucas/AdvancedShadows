@@ -46,15 +46,18 @@ public class ShadowOverlayRenderer {
 
                     var stateAt = world.getBlockState(pos);
 
-                    // Overlay-Position muss Luft oder Wasseroberfläche sein
                     boolean isAir = stateAt.isAir();
+                    // Wasseroberfläche: dieser Block ist Wasser, Block drüber ist kein Wasser
                     boolean isWaterSurface = stateAt.getBlock() == Blocks.WATER
                             && world.getBlockState(pos.up()).getBlock() != Blocks.WATER;
 
                     if (!isAir && !isWaterSurface) continue;
 
-                    // Block darunter muss solid, Leaves oder Wasser sein
+                    if (isAir && world.getBlockState(pos.down()).getBlock() == Blocks.WATER) continue;
+
+
                     if (!isWalkableSurface(world, pos.down())) continue;
+
 
                     int skyLight = world.getLightLevel(LightType.SKY, pos);
 
@@ -71,7 +74,9 @@ public class ShadowOverlayRenderer {
                     }
 
                     double x1 = pos.getX() - cam.x;
-                    double y1 = pos.getY() + OVERLAY_Y_OFFSET - cam.y;
+                    // Wasser: Overlay auf Oberkante (+1.0), Luft: auf Unterkante (+0.0)
+                    double surfaceY = isWaterSurface ? pos.getY() + 1.0 : pos.getY();
+                    double y1 = surfaceY + OVERLAY_Y_OFFSET - cam.y;
                     double x2 = x1 + 1.0;
                     double z1 = pos.getZ() - cam.z;
                     double z2 = z1 + 1.0;
@@ -85,7 +90,11 @@ public class ShadowOverlayRenderer {
         matrices.pop();
     }
 
-
+    /**
+     * Gibt true zurück wenn der Block als Untergrund für das Overlay gilt:
+     * solide Blöcke oder Leaves. Wasser absichtlich NICHT hier —
+     * Wasser wird als Overlay-Position selbst behandelt (isWaterSurface).
+     */
     private static boolean isWalkableSurface(World world, BlockPos pos) {
         var state = world.getBlockState(pos);
         return state.isSolidBlock(world, pos)
