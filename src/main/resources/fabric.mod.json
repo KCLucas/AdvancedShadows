@@ -3,34 +3,19 @@
 	"id": "advancedshadows",
 	"version": "${version}",
 	"name": "AdvancedShadows",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
+	"description": "Clientside shadow overlay for finding skybases. Shows sky light levels as colored carpets.",
+	"authors": ["KCLucas"],
+	"contact": {},
+	"license": "MIT",
 	"icon": "assets/advancedshadows/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
-		"main": [
-			"com.kclucas.advancedshadows.AdvancedShadows"
-		],
-		"client": [
-			"com.kclucas.advancedshadows.client.AdvancedShadowsClient"
-		]
+		"main": ["com.kclucas.advancedshadows.AdvancedShadows"],
+		"client": ["com.kclucas.advancedshadows.client.AdvancedShadowsClient"]
 	},
-	"mixins": [
-		"advancedshadows.mixins.json",
-		{
-			"config": "advancedshadows.client.mixins.json",
-			"environment": "client"
-		}
-	],
+	"mixins": ["advancedshadows.mixins.json", "advancedshadows.client.mixins.json"],
 	"depends": {
-		"fabricloader": ">=0.19.3",
+		"fabricloader": ">=0.15.0",
 		"minecraft": "~1.21.11",
 		"java": ">=21",
 		"fabric-api": "*"
